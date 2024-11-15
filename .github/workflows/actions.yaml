@@ -1,0 +1,63 @@
+name: "Terraform VPC"
+
+on:
+  workflow_dispatch:
+    inputs:
+      approve:
+        description: 'Approve the Terraform VPC workflow'
+        required: true
+  push:
+    branches:
+      - main
+    paths:
+      - 'VPC/**'
+      - 'EC2/**'
+
+jobs:
+  approval:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Approve Terraform VPC Workflow
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.approve == 'true'
+        run: echo "Terraform VPC workflow approved, proceeding to Terraform steps"
+
+  terraform_vpc:
+    name: "Terraform VPC"
+    runs-on: ubuntu-latest
+    needs: approval
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.MY_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.MY_AWS_SECRET_ACCESS_ KEY_}}
+
+    defaults:
+      run:
+        working-directory: VPC
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.1
+          terraform_wrapper: false
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+
+#This block of terraform destroy should be commented out to prevent the destruction of the resources immediately after provisioning.
+     # - name: Terraform Destroy
+     #   run: terraform destroy -auto-approve
