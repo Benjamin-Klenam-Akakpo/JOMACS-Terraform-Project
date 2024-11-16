@@ -9,12 +9,10 @@ terraform {
       version = "~> 5.17.0"
     }
   }
-}
 
-terraform {
   backend "s3" {
     bucket = "klenam-jomacs-terraform-projects"
-    key = "devops/infrastructure/s3.tfstate"
+    key    = "devops/infrastructure/s3.tfstate"
     region = "us-east-2"
   }
 }
