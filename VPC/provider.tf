@@ -13,7 +13,7 @@ terraform {
 
 terraform {
   backend "s3" {
-    bucket = "jomacs-terraform-projects"
+    bucket = "klenam-jomacs-terraform-projects"
     key    = "layer1/terraform.tfstate"
     region = "us-east-2"
   }
