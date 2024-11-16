@@ -10,9 +10,4 @@ terraform {
     }
   }
 
-  backend "s3" {
-    bucket = "klenam-jomacs-terraform-projects"
-    key    = "devops/infrastructure/s3.tfstate"
-    region = "us-east-2"
-  }
-}
+  
